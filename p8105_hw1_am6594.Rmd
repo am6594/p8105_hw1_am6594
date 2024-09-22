@@ -1,0 +1,103 @@
+---
+title: "p8105_hw1_am654.Rmd"
+author: "Alice Mao"
+date: "2024-09-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1
+
+## Description
+```{r}
+# Load the dataset
+data("penguins", package = "palmerpenguins")
+```
+
+```{r}
+# Information regarding the dataset
+nrow(penguins)  # Number of rows
+ncol(penguins)  # Number of columns
+mean(penguins$flipper_length_mm, na.rm = TRUE)  # Calculate the mean flipper length
+```
+
+The 'penguins' dataset includes information regarding 334 penguins. The dataset contains 344 rows and 8 columns. The 8 columns are 'species', 'island', 'bill_length_mm', "bill_depth_mm', 'flipper_length_mm', 'body_mass_g', 'sex', and 'year'. Some important variables are 'body_mass_g' which is the body mass in gram for each penguins, 'species' which is the species for each penguins, and 'flipper_length_mm' which is the length of each penguins' flipper in millimeter. 
+
+The mean of the flipper length is 200.9152, which is approximately 201mm. 
+
+## Scatterplot: Flipper Length (mm) vs. Bill Length (mm)
+
+```{r}
+# Load the library
+library(ggplot2)
+
+# Create the scatterplot
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  labs(title = "Flipper Length vs Bill Length",
+       x = "Bill Length (mm)",
+       y = "Flipper Length (mm)") +
+  theme_minimal()
+```
+
+```{r}
+# Export the scatterplot
+ggsave("scatterplot_penguins.png")
+```
+
+# Problem 2
+
+```{r}
+# Load the library
+library(tidyverse)
+
+# Set seed
+set.seed(123)
+
+# Create the dataframe
+df_problem2 <- tibble(
+  random_normal = rnorm(10), # random sample of size 10 from a standard normal distribution
+  logical_vector = random_normal > 0, # a logical vector indicating whether elements of the sample are greater than 0
+  character_vector = as.character(1:10), # character vector of length 10
+  factor_vector = factor(sample(c("Level1", "Level2", "Level3"), 10, replace = TRUE)) # a factor vector of length 10, with 3 different factor “levels”
+)
+
+```
+
+## What works and what doesn’t?
+
+```{r}
+
+# Take the mean of each variable
+mean_numeric <- mean(pull(df_problem2, random_normal)) # Take the mean for normal distribution sample
+mean_logical <- mean(pull(df_problem2, logical_vector)) # Take the mean for logical vector
+mean_character <- mean(pull(df_problem2, character_vector)) # Take the mean for character vector
+mean_factor <- mean(pull(df_problem2, factor_vector)) # Take the mean for factor vector
+
+# Print the results
+cat("Mean of random_normal:", mean_numeric, "\n")
+cat("Mean of logical_vector:", mean_logical, "\n")
+cat("Mean of character_vector:", mean_character, "\n")
+cat("Mean of factor_vector:", mean_factor, "\n")
+```
+Based on the results, we can only take the mean for 2 variables, random sample from a normal distribution and logical vector, since they are numeric and logical. Character vector and factor vector does not works. 
+
+
+## Convert Variables
+```{r}
+# Convert variables to numeric
+numeric_logical <- as.numeric(df_problem2$logical_vector) # convert logical variables, TRUE = 1, FALSE = 0
+numeric_character <- as.numeric(df_problem2$character_vector) # convert character vectors
+numeric_factor <- as.numeric(df_problem2$factor_vector) # converts factor levels
+```
+
+Using the as.numeric function, R converts logical, character, and factor variables into numeric variables. By changing these variables to numeric values, R can calculate a mean because each element now has a numerical representation. For example, for factor levels, R assigns 1 to Level 1, 2 to Level 3, 3 to Level 3, and so on. Thus, by converting these variables to numeric, we can better quantify and analyze the distribution of the data in a meaningful way. 
+
+
+
+
+
+
